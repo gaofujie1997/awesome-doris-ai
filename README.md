@@ -90,25 +90,107 @@ FROM doc_store ORDER BY dist ASC LIMIT 10;
 
 ## AI Functions & LLM Integration
 
-> Doris connects to OpenAI / DeepSeek / Gemini / local models via a `type = 'ai'` Resource and calls them directly in SQL.
+> Doris provides built-in AI functions that call external LLMs directly inside SQL — no data export needed. Run text classification, extraction, sentiment analysis, grammar fixing, content generation, masking, similarity, summarization, translation and cross-row aggregation right in the database.
+>
+> Official docs: [AI Function Overview](https://doris.apache.org/docs/dev/ai/ai-function-overview)
 
-**AI Functions**
+**Pick a function by use-case**
 
-`AI_CLASSIFY` · `AI_EXTRACT` · `AI_FILTER` · `AI_FIXGRAMMAR` · `AI_GENERATE` · `AI_MASK` · `AI_SENTIMENT` · `AI_SIMILARITY` · `AI_SUMMARIZE` · `AI_TRANSLATE` · `AI_AGG`
+| What you want to do | Function | Returns |
+| --- | --- | --- |
+| Pick the best match from given labels | [`AI_CLASSIFY`](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/ai-classify) | a label string |
+| Extract info from text by tags | [`AI_EXTRACT`](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/ai-extract) | extracted content per tag |
+| Check if text meets a semantic condition | [`AI_FILTER`](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/ai-filter) | `BOOLEAN` |
+| Fix grammar / spelling errors | [`AI_FIXGRAMMAR`](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/ai-fixgrammar) | corrected text |
+| Generate new text from input | [`AI_GENERATE`](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/ai-generate) | generated text |
+| Mask sensitive info | [`AI_MASK`](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/ai-mask) | text with `[MASKED]` |
+| Analyze sentiment | [`AI_SENTIMENT`](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/ai-sentiment) | `positive`/`negative`/`neutral`/`mixed` |
+| Semantic similarity of two texts | [`AI_SIMILARITY`](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/ai-similarity) | 0–10 float, higher = more similar |
+| Summarize a text | [`AI_SUMMARIZE`](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/ai-summarize) | summary text |
+| Translate to a target language | [`AI_TRANSLATE`](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/ai-translate) | translated text |
+| Cross-row aggregation over multiple rows | [`AI_AGG`](https://doris.apache.org/docs/dev/sql-manual/sql-functions/aggregate-functions/ai-agg) | aggregated text |
 
-**Quick Start**
+### Connect an LLM: configure an AI Resource
+
+Doris centralizes LLM access through the [Resource](https://doris.apache.org/docs/dev/sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE) mechanism — one place for provider, model, key and endpoint, keeping keys secure and access controlled.
+
+**Resource parameters**
+
+| Parameter | Required | Description |
+| --- | --- | --- |
+| `type` | yes | must be `ai` |
+| `ai.provider_type` | yes | external provider |
+| `ai.endpoint` | yes | AI API endpoint URL |
+| `ai.model_name` | yes | model name |
+| `ai.api_key` | yes (except `local`) | API key |
+| `ai.temperature` | no | 0–1; default `-1` (unset) |
+| `ai.max_tokens` | no | default `-1` (unset); Anthropic default `2048` |
+| `ai.max_retries` | no | default `3` |
+| `ai.retry_delay_second` | no | default `0` |
+
+**Supported providers**: OpenAI · Anthropic · Gemini · DeepSeek · Local · MoonShot · MiniMax · Zhipu · Qwen · Baichuan. If your provider follows OpenAI/Anthropic/Gemini API format, you can pick the matching `ai.provider_type`.
+
+### Quick Start
+
+**Step 1 — create an AI Resource** (OpenAI and DeepSeek examples)
 
 ```sql
--- Create an AI Resource
-CREATE RESOURCE "ai_r" PROPERTIES (
+-- OpenAI
+CREATE RESOURCE 'openai_example' PROPERTIES (
   'type' = 'ai', 'ai.provider_type' = 'openai',
-  'ai.endpoint' = 'https://...', 'ai.model_name' = 'gpt-4o', 'ai.api_key' = 'sk-xxx'
+  'ai.endpoint' = 'https://api.openai.com/v1/responses',
+  'ai.model_name' = 'gpt-4.1', 'ai.api_key' = 'xxxxx'
 );
-SET default_ai_resource = 'ai_r';
 
--- Sentiment analysis directly in SQL
-SELECT comment, AI_SENTIMENT(comment) FROM user_comment;
+-- DeepSeek
+CREATE RESOURCE 'deepseek_example' PROPERTIES (
+  'type' = 'ai', 'ai.provider_type' = 'deepseek',
+  'ai.endpoint' = 'https://api.deepseek.com/chat/completions',
+  'ai.model_name' = 'deepseek-chat', 'ai.api_key' = 'xxxxx'
+);
 ```
+
+**Step 2 — set a default resource (optional)**
+
+```sql
+SET default_ai_resource = 'ai_resource_name';
+```
+
+**Step 3 — call AI functions in SQL**
+
+*Example A — semantic relevance scoring: return the top 10 docs most relevant to "Apache Doris"*
+
+```sql
+SELECT
+  c,
+  CAST(AI_GENERATE(CONCAT(
+    'Please score the relevance of the following document content to Apache Doris, ',
+    'with a floating-point number from 0 to 10, output only the score. Document:', c
+  )) AS DOUBLE) AS score
+FROM doc_pool
+ORDER BY score DESC
+LIMIT 10;
+```
+
+*Example B — candidate / job semantic matching with `AI_FILTER`*
+
+```sql
+SELECT c.candidate_id, c.name, j.job_id, j.title
+FROM candidate_profiles AS c
+JOIN job_requirements AS j
+WHERE AI_FILTER(CONCAT(
+  'Does the following candidate self-introduction match the job description?',
+  'Job: ', j.jd_text, ' Candidate: ', c.self_intro
+));
+```
+
+### Design
+
+- **Resource `<resource_name>`** must be a string constant.
+- **`system_prompt`** differs per function; `user_prompt` carries only the input parameters.
+- **Request body**: unset optional params (e.g. `ai.temperature`, `ai.max_tokens`) are omitted (except Anthropic, which requires `max_tokens`, default 2048).
+- **Timeout**: per-request timeout equals the remaining query time (controlled by the `query_timeout` session variable); extend it if calls time out.
+- **Provider abstraction**: Doris implements request construction, auth and response parsing per provider, so you only declare the provider type.
 
 ## Tutorials & Blogs
 
