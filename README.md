@@ -194,13 +194,35 @@ WHERE AI_FILTER(CONCAT(
 
 ## Tutorials & Blogs
 
-> High-quality tutorials and official/community blog posts, organized by topic.
+> Curated from the official Doris blog, the community, Chinese tech platforms (Zhihu, Tencent Cloud, Aliyun, Huawei Cloud, CSDN, modb.pro) and English sources — beyond the official forum.
+
+### Overview & Roadmap
+
+- **AI integration overview**: [Doris 4.x AI: full-text & vector search and intelligent analysis in one system](https://cloud.tencent.cn/developer/article/2624355) (Tencent Cloud)
+- **2026 Roadmap**: [Apache Doris 2026 Roadmap: how to choose data infrastructure in the AI era](https://blog.51cto.com/u_14767244/14823334)
+- **AI adoption at scale**: [ByteDance × Apache Doris: exploring a one-stop AI data engine](https://zhuanlan.zhihu.com/p/1989553954347049439) (Zhihu) / [ByteDance: Apache Doris + AI one-stop fusion data engine in practice](https://selectdb.com/blog/1539) (SelectDB)
+- **AI capabilities deep-dive**: [Apache Doris 4.0 AI capabilities (2): AI functions designed for enterprise](https://www.modb.pro/db/1964890236467556352) (modb.pro)
+
+### Vector Search & RAG
 
 - **Vector search practice**: [97% recall, 900 QPS: production-grade vector search in Apache Doris 4.1](https://selectdb.com/blog/1698)
-- **AI integration overview**: [Doris 4.x AI: full-text & vector search and intelligent analysis in one system](https://cloud.tencent.cn/developer/article/2624355)
+- **RAG from basic to knowledge-graph**: [Doris & SelectDB for AI: from basic RAG to knowledge-graph-enhanced implementation](https://cn.selectdb.com/blog/1682)
+- **Production multimodal retrieval**: [Kuaishou: billion-scale multimodal retrieval on Apache Doris](https://cloud.tencent.cn/developer/article/2747664) (Tencent Cloud)
+- **Lakehouse vector search**: [Kuaishou: Doris querying Paimon indexes — lakehouse vector retrieval built together](https://developer.aliyun.com/article/1762678) (Alibaba Cloud)
+- **Official practical guide**: [Vector Index Practical Guide](https://doris.apache.org/docs/4.x/table-design/index/vector-index/practical-guide)
+
+### AI Agent / MCP / Dify Integration
+
+- **MCP + Dify**: [Connect AI Agents and real-time data warehouse: Apache Doris MCP Server + Dify in practice](https://cloud.tencent.com.cn/developer/article/2698145) (Tencent Cloud)
+- **Zero-to-master**: [Dify + DeepSeek + Doris MCP Server: second-level SQL calls](https://cloud.tencent.com.cn/developer/article/2558425) (Tencent Cloud)
+- **Data quality via MCP**: [Doris MCP + Dify make AI+ data-quality governance simple](https://cloud.tencent.com.cn/developer/article/2553599) (Tencent Cloud)
 - **Agent operations**: [DB operations for AI agents: SelectDB CLI and Skills architecture in practice](https://cn.selectdb.com/blog/1741)
-- **AI practical system**: [Doris & SelectDB for AI: building a non-structured-data intelligent-analysis system from scratch](https://bbs.huaweicloud.com/blogs/474525)
-- **2026 Roadmap**: [Apache Doris 2026 Roadmap: how to choose data infrastructure in the AI era](https://blog.51cto.com/u_14767244/14823334)
+
+### AI SQL Functions & Practice
+
+- **DeepSeek / ChatGPT / Claude in SQL**: [AI + data analytics: Doris lets SQL call DeepSeek, ChatGPT, Claude directly](https://cloud.tencent.cn/developer/article/2564490) (Tencent Cloud)
+- **AI practical system**: [Doris & SelectDB for AI: build a non-structured-data intelligent-analysis system from scratch](https://cloud.tencent.com.cn/developer/article/2632290) (Tencent Cloud)
+- **Official LLM SQL functions**: [LLM SQL Functions](https://doris.apache.org/docs/dev/key-features/llm-sql-functions)
 
 ## Examples & Open-source Projects
 

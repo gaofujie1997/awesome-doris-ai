@@ -194,13 +194,35 @@ WHERE AI_FILTER(CONCAT(
 
 ## 教程与博客
 
-> 按主题组织的高质量中英文教程与官方/社区博客。
+> 全网搜集整理（不只局限于官方论坛），来源涵盖 Doris 官方博客、社区、知乎、腾讯云、阿里云、华为云、CSDN、墨天轮以及英文技术博客等。
+
+### 概览与路线图
+
+- **AI 集成概览**：[Doris 4.x AI：一站式搞定文本/向量搜索+智能分析](https://cloud.tencent.cn/developer/article/2624355)（腾讯云）
+- **2026 Roadmap**：[Apache Doris 2026 Roadmap：AI 时代数据基础设施如何选型](https://blog.51cto.com/u_14767244/14823334)
+- **大规模 AI 落地**：[漫画：字节跳动 × Apache Doris 的 AI 之路](https://zhuanlan.zhihu.com/p/1989553954347049439)（知乎）/ [字节跳动：Apache Doris + AI 一站式融合数据引擎的探索与实践](https://selectdb.com/blog/1539)（SelectDB）
+- **AI 能力深入**：[Apache Doris 4.0 AI 能力揭秘（二）：为企业级应用而生的 AI 函数设计与实践](https://www.modb.pro/db/1964890236467556352)（墨天轮）
+
+### 向量检索与 RAG
 
 - **向量检索实践**：[97% 召回率、900 QPS：Apache Doris 4.1 生产级向量检索的工程实践](https://selectdb.com/blog/1698)
-- **AI 集成概览**：[Doris 4.x AI：一站式搞定文本/向量搜索+智能分析](https://cloud.tencent.cn/developer/article/2624355)
+- **RAG 从基础到知识图谱**：[Doris & SelectDB for AI 实战：从基础 RAG 到知识图谱增强的完整实现](https://cn.selectdb.com/blog/1682)
+- **生产级多模态检索**：[快手基于 Apache Doris 千亿多模态检索的实践](https://cloud.tencent.cn/developer/article/2747664)（腾讯云）
+- **湖仓向量检索**：[Doris 直查 Paimon 索引：快手湖上向量检索的共建与落地](https://developer.aliyun.com/article/1762678)（阿里云）
+- **官方实战手册**：[向量索引实用手册](https://doris.apache.org/docs/4.x/table-design/index/vector-index/practical-guide)
+
+### AI Agent / MCP / Dify 集成
+
+- **MCP + Dify**：[打通 AI Agent 与实时数仓：Apache Doris MCP Server 与 Dify 实战](https://cloud.tencent.com.cn/developer/article/2698145)（腾讯云）
+- **零基础上手**：[零基础上手！用 Dify + DeepSeek + Doris MCP Server，实现秒级 SQL 调用](https://cloud.tencent.com.cn/developer/article/2558425)（腾讯云）
+- **数据质量治理**：[Doris MCP + Dify 让 AI+ 数据质量治理变得如此简单](https://cloud.tencent.com.cn/developer/article/2553599)（腾讯云）
 - **Agent 运维**：[面向 AI Agent 的数据库运维：SelectDB CLI 与 Skills 架构设计及实践](https://cn.selectdb.com/blog/1741)
-- **AI 实操系统**：[Doris & SelectDB for AI 实操：从零搭建非结构化数据智能分析洞察系统](https://bbs.huaweicloud.com/blogs/474525)
-- **2026 Roadmap**：[Apache Doris 2026 Roadmap：AI 时代数据基础设施如何选型](https://blog.51cto.com/u_14767244/14823334)
+
+### AI SQL 函数与实践
+
+- **SQL 直接调大模型**：[AI+数据分析来了！Doris 让 SQL 直接调用 DeepSeek、ChatGPT、Claude...](https://cloud.tencent.cn/developer/article/2564490)（腾讯云）
+- **AI 实操系统**：[Doris & SelectDB for AI 实操：从零搭建非结构化数据智能分析洞察系统](https://cloud.tencent.com.cn/developer/article/2632290)（腾讯云）
+- **官方 LLM SQL 函数**：[LLM SQL Functions](https://doris.apache.org/docs/dev/key-features/llm-sql-functions)
 
 ## 示例与开源实践
 
